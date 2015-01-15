@@ -18,6 +18,10 @@ Program documentation can be found in the header of the program.
 Installation
 ============
 
+Requires:
+    
+    - lscpu
+
 Update your PATH environment variable in your shell rc file with:
     
     $ export PATH="${PATH}":"/PATH/TO/PROGRAM/cpu
