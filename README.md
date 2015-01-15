@@ -38,8 +38,8 @@ If you have any problems, feel free to email me at 'gabeg@bu.edu'.
 Potential Problems
 ==================
 
-- To display CPU architecture information, the "lscpu" command is used, thus if this 
-  command is not found, an error will result.
+- If the "--info" option is not working, it may be because "lscpu" command cannot be
+  found. If you install this program, this option should start to work.
 
 
 
