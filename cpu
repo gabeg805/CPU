@@ -1,0 +1,164 @@
+#!/bin/bash
+## 
+## CONTRIBUTORS: 
+## 
+##     * Gabriel Gonzalez (gabeg@bu.edu) 
+## 
+## 
+## LICENSE: 
+## 
+##     The MIT License (MIT)
+## 
+## 
+## NAME:
+## 
+##     cpu - Display CPU information.
+## 
+## 
+## SYNTAX: 
+## 
+##     cpu [-i] [-d]
+## 
+## 
+## PURPOSE:
+## 
+##     Display information on the computer CPU usage and architecture.
+## 
+## 
+## OPTIONS:
+## 
+##     -i, --info
+##         Displays extra CPU information.
+## 
+##     -d, --display
+##         Display a GUI noification, using "noti", that shows the CPU usage.
+## 
+## 
+## FUNCTIONS:
+## 
+##     print_usage - Print program usage.
+## 
+##     print_cpu   - Print CPU usage.
+## 
+##     gui_display - Display CPU usage using the GUI.
+## 
+## 
+## FILE STRUCTURE:
+## 
+##     * Print Program Usage
+##     * Print CPU Usage
+##     * GUI CPU Notification
+##     * Display CPU Information
+## 
+## 
+## MODIFICATION HISTORY:
+## 	
+##     gabeg Dec 19 2014 <> Created.
+## 
+##     gabeg Jan 07 2015 <> Added the GUI notification display.
+## 
+## **********************************************************************************
+
+
+
+## ================
+## GLOBAL VARIABLES
+## ================
+
+## Program information
+ARGV=("$@")
+PROG_NAME=`basename $0`
+
+## Gui notification bubble
+NOTIFY="noti"
+NOTIFY_PATH=`hash "${NOTIFY}" 2>&1`
+
+
+
+## ###############################
+## ##### PRINT PROGRAM USAGE #####
+## ###############################
+
+## Print program usage
+function print_usage {
+    echo "Usage: cpu [-i]"
+    exit 1
+}
+
+
+
+## ###########################
+## ##### PRINT CPU USAGE #####
+## ###########################
+
+## Print CPU usage
+function print_cpu {
+    
+    ## Determine CPU usage
+    local all_cpu_used=(`mpstat -P ALL | tail -4 | awk ' { print 100 - $13 } '`)
+    
+    local i=0
+    for cpu in "${all_cpu_used[@]}"; do
+        echo "CPU ${i}: ${cpu}%"
+        i=$[ $i + 1 ]
+    done
+}
+
+
+
+## ####################################
+## ##### GUI BATTERY NOTIFICATION #####
+## ####################################
+
+## GUI notification for battery information
+function gui_display {
+    
+    ## Check if notification program exists
+    if [ ! -z "${NOTIFY_PATH}" ]; then 
+        echo "${PROG_NAME}: '${NOTIFY}' does not exist."
+        exit 1
+    fi
+    
+    ## Display current battery level
+    ${NOTIFY} --time 5 -b "$(print_cpu)" 
+}
+
+
+
+## ###################################
+## ##### DISPLAY CPU INFORMATION #####
+## ###################################
+
+## Print CPU information
+function main {
+    
+    
+    ## Print CPU information
+    case "${ARGV[0]}" in
+        "") 
+            print_cpu
+            ;;
+        
+        "-i"|"--info")
+            
+            ## Check if CPU architecture command exists
+            lsc_prog=`hash lscpu 2>&1`
+            if [ -z "${lsc_prog}" ]; then
+                lscpu
+            fi
+            ;;
+        
+        "-d"|"--display")
+            gui_display
+            ;;
+        
+        *)
+            print_usage
+            ;;
+    esac
+}
+
+
+
+## Execute main
+main 
