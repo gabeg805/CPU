@@ -20,6 +20,7 @@ Installation
 
 Requires:
     
+    - mpstat
     - lscpu
 
 Update your PATH environment variable in your shell rc file with:
