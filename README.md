@@ -1,4 +1,4 @@
-# CPU
+# CPUSTAT
 
 ## What is it?
 
