@@ -16,9 +16,10 @@
 
 # Globals
 PROG="${0##*/}"
+PROGDIR=$(dirname "$(readlink -f "${0}")")
 
 # Source utility
-. ../lib/util.sh
+. "${PROGDIR}/../lib/bash/util.sh"
 
 # Exit statuses
 STATUS_NORMAL=0
